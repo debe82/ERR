@@ -1,0 +1,43 @@
+## DB config goes here
+spring:
+  output:
+    ansi:
+      enabled: always
+  sql:
+    init:
+      mode: always
+      platform: h2
+  datasource:
+#    url: jdbc:postgresql://mouse.db.elephantsql.com/hzjiemrt
+#    username: hzjiemrt
+#    password: sffIht84O7WVCZRB4rfaOM9J6mIdZWCn
+#    url: jdbc:postgresql://localhost:5432/rri
+#    username: postgres
+#    password: pgpwd
+    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:err
+    url: jdbc:h2:file:E:\Programming\Java\JavaProjects\RRI_proj\DB\err
+    username: sa
+    password: sa
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+  h2:
+    console:
+      enabled: true
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ##      ddl-auto: update
+      ddl-auto: create
+    defer-datasource-initialization: true
+
+## Logging settings
+debug: true
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          autoconfigure: ERROR
