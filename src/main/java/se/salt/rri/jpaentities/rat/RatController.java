@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.salt.rri.jpaentities.clinicalStatus.ClinicalStatus;
 import se.salt.rri.jpaentities.ratStatus.RatStatus;
+import se.salt.rri.jpaentities.ratStatus.RatStatusService;
 import se.salt.rri.models.AddRatDto;
 import se.salt.rri.models.RatDto;
 import se.salt.rri.models.UpdRatDto;
@@ -18,6 +19,9 @@ import java.util.UUID;
 public class RatController {
   @Autowired
   RatService service;
+
+  @Autowired
+  RatStatusService ratStatusService;
 
   @CrossOrigin(origins = "http://localhost:3000")
   @GetMapping

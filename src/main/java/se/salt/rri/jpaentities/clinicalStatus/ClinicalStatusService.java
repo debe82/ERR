@@ -37,6 +37,7 @@ public class ClinicalStatusService {
 
     public RatStatusDto convertStatusToDto(RatStatus ratStatus) {
         return new RatStatusDto(
+                ratStatus.getRatStatusId(),
                 ratStatus.getClinicalStatus().getTitle(),
                 ratStatus.getClinicalStatus().getDescription(),
                 ratStatus.getClinicalStatus().getMedInstructions(),

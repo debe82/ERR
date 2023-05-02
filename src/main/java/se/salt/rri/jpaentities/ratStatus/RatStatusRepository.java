@@ -11,4 +11,10 @@ public class RatStatusRepository {
     public RatStatus addNewRatStatus(RatStatus ratStatus) {
         return jpaRepo.save(ratStatus);
     }
+    public RatStatus updRatStatus(RatStatus ratStatus) {
+        return jpaRepo.save(ratStatus);
+    }
+
+    public RatStatus getStatusById(long id) { return jpaRepo.findById(id).orElse(null);
+    }
 }

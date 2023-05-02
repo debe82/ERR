@@ -16,7 +16,7 @@ spring:
 #    password: pgpwd
     driver-class-name: org.h2.Driver
 #    url: jdbc:h2:mem:err
-    url: jdbc:h2:file:E:\Programming\Java\JavaProjects\RRI_proj\DB\err
+    url: jdbc:h2:file:E:\Programming\Java\JavaProjects\ERR\DB\err
     username: sa
     password: sa
     hikari:
@@ -30,7 +30,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ##      ddl-auto: update
-      ddl-auto: create
+      ddl-auto: update
     defer-datasource-initialization: true
 
 ## Logging settings

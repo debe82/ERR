@@ -7,6 +7,7 @@ import se.salt.rri.jpaentities.clinicalStatus.ClinicalStatusService;
 import se.salt.rri.jpaentities.country.Country;
 import se.salt.rri.jpaentities.ratStatus.RatStatus;
 import se.salt.rri.jpaentities.ratStatus.RatStatusRepository;
+import se.salt.rri.jpaentities.ratStatus.RatStatusService;
 import se.salt.rri.models.*;
 import se.salt.rri.jpaentities.city.City;
 import se.salt.rri.jpaentities.city.CityService;
@@ -22,11 +23,11 @@ public class RatService {
 
   @Autowired
   RatRepository repo;
-
-  @Autowired
-  RatStatusRepository ratStatusRepo;
   @Autowired
   CityService cityService;
+
+  @Autowired
+  RatStatusService ratStatusService;
 
   @Autowired
   ClinicalStatusService clinicalService;
@@ -102,6 +103,19 @@ public class RatService {
 
   }
 
+  public RatStatus addRatStatus(long id, ClinicalStatus clinicalStatus) {
+    RatStatus newRatStatus = new RatStatus();
+    RescuedRat rat = getRescuedRatById(id);
+    newRatStatus.setClinicalStatus(clinicalStatus);
+    newRatStatus.setStartDate(new Date());
+    newRatStatus.setCured(false);
+    newRatStatus.setRat(rat);
+
+    ratStatusService.addNewRatStatus(newRatStatus);
+
+    return newRatStatus;
+  }
+
   public RescuedRat updateRat(Long id, UpdRatDto rat) {
     RescuedRat ratToUpdate = getRescuedRatById(id);
     RatDto updRatDto = convertRatToDto(ratToUpdate);
@@ -128,24 +142,25 @@ public class RatService {
     }
 
     if(rat.statuses() != null) {
-      List<ClinicalStautsDto> dtoStatusList = new ArrayList<>();
+
+      List<RatStatus> ratStatuses = ratToUpdate.getRatstatuses(); //get the list of statuses
+
       for (RatStatusDto ratStatusDto : rat.statuses()) {
-        //check if a new issue must be added
+
         if (ratStatusDto.title() != null && ratStatusDto.description() != null && ratStatusDto.medInstructions() != null) {
-          dtoStatusList.add(
-                  new ClinicalStautsDto(ratStatusDto.title(),
-                          ratStatusDto.description(),
-                          ratStatusDto.medInstructions()));
-        } else {
-          //check if the stop must be updated
-          if (ratStatusDto.stop() != null) {
-
-
+          //check if a new issue must be added
+          long ratStatusId = ratStatusDto.id();
+          if (ratStatusId < 1) return null;
+          if (ratToUpdate.getRatstatuses().get(Math.toIntExact(ratStatusId)) == null) {
+            ClinicalStatus cs = clinicalService.getStatusByTitle(ratStatusDto.title());
+            ratStatuses.add(addRatStatus(ratToUpdate.getRescuedRatId(), cs));
+          } else { //or else update
+            ratStatuses.set(Math.toIntExact(ratStatusId) ,ratStatusService.updRatStatus(ratStatusId, ratStatusDto));
           }
-
         }
       }
-      List<ClinicalStatus> newStatusList = clinicalService.AddNewStatus(null);
+
+      ratToUpdate.setRatstatuses(ratStatuses);
      // ratToUpdate.setRatStatuses(newStatusList);
     }
 
@@ -167,16 +182,4 @@ public class RatService {
     return repo.update(ratToUpdate);
   }
 
-  public RatStatus addRatStatus(long id, ClinicalStatus clinicalStatus) {
-    RatStatus newRatStatus = new RatStatus();
-    RescuedRat rat = getRescuedRatById(id);
-    newRatStatus.setClinicalStatus(clinicalStatus);
-    newRatStatus.setStartDate(new Date());
-    newRatStatus.setCured(false);
-    newRatStatus.setRat(rat);
-
-    ratStatusRepo.addNewRatStatus(newRatStatus);
-
-    return newRatStatus;
-  }
 }
