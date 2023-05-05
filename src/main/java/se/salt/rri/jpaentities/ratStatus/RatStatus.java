@@ -15,7 +15,7 @@ public class RatStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ratStatusId;
     private Date startDate;
-//    private String additionalCure;
+//    private List<String> additionalCure;
     private Date endDate;
     private boolean isCured;
 

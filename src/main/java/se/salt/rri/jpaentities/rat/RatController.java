@@ -20,9 +20,6 @@ public class RatController {
   @Autowired
   RatService service;
 
-  @Autowired
-  RatStatusService ratStatusService;
-
   @CrossOrigin(origins = "http://localhost:3000")
   @GetMapping
   ResponseEntity<List<RatDto>> getAllRats(){
