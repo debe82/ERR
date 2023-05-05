@@ -20,13 +20,15 @@ public class RatStatusService {
     }
 
     public RatStatus updRatStatus(long id, RatStatusDto dto) {
-        RatStatus rs = getRatStatusById(id);
+        System.out.println("info to update: " + dto);
+        RatStatus ratStatusToUpdate = getRatStatusById(id);
+        System.out.println("rat status to update: " + ratStatusToUpdate);
         //not working, to check
         //da aggiornare: medical instructions can change during the course
-        if (rs.getEndDate() != null) { rs.setEndDate(dto.stop()); }
-        rs.setCured(dto.cured());
-
-        return ratStatusRepo.updRatStatus(rs);
+        if (dto.stop() != null) { ratStatusToUpdate.setEndDate(dto.stop()); }
+        ratStatusToUpdate.setCured(dto.cured());
+        System.out.println("ratStatus after update: " + ratStatusToUpdate);
+        return ratStatusRepo.updRatStatus(ratStatusToUpdate);
     }
 
     public RatStatus addNewRatStatus(RatStatus newRatStatus) {

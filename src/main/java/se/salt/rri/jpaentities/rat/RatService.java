@@ -116,14 +116,13 @@ public class RatService {
     return newRatStatus;
   }
 
-  public RescuedRat updateRat(Long id, UpdRatDto rat) {
+  public RatDto updateRat(Long id, UpdRatDto rat) {
     RescuedRat ratToUpdate = getRescuedRatById(id);
     RatDto updRatDto = convertRatToDto(ratToUpdate);
 
 
     System.out.println("ratToUpdate: " + ratToUpdate);
     System.out.println("new values rat: " + rat);
-    System.out.println("updRatDto:" + updRatDto);
 
     if(rat.name() != null && rat.name() != "") {
       ratToUpdate.setName(rat.name());
@@ -142,23 +141,40 @@ public class RatService {
     }
 
     if(rat.statuses() != null) {
-
+      System.out.println("there are some news about the status");
       List<RatStatus> ratStatuses = ratToUpdate.getRatstatuses(); //get the list of statuses
 
       for (RatStatusDto ratStatusDto : rat.statuses()) {
+        long ratStatusId = ratStatusDto.id();
+        System.out.println("ratStatusId: " + ratStatusId);
+        if (ratStatusId < 1) return null;
 
         if (ratStatusDto.title() != null && ratStatusDto.description() != null && ratStatusDto.medInstructions() != null) {
+          System.out.println("status info available");
           //check if a new issue must be added
-          long ratStatusId = ratStatusDto.id();
-          if (ratStatusId < 1) return null;
-          if (ratToUpdate.getRatstatuses().get(Math.toIntExact(ratStatusId)) == null) {
+
+          boolean ratStatusFound = ratStatuses.stream()
+                  .anyMatch(rs -> rs.getRatStatusId() == ratStatusId);
+
+          if (ratStatusFound == false) {
+//          if (ratToUpdate.getRatstatuses().get(Math.toIntExact(ratStatusId)) == null) { //maybe the get is not mapped
+            System.out.println("the current status is not present in the rat history, creating a new status");
             ClinicalStatus cs = clinicalService.getStatusByTitle(ratStatusDto.title());
-            ratStatuses.add(addRatStatus(ratToUpdate.getRescuedRatId(), cs));
+            System.out.println("new clinical status: " + cs);
+            RatStatus ratStatus = addRatStatus(ratToUpdate.getRescuedRatId(), cs);
+            System.out.println("new rat status added: " + ratStatus);
+            ratStatuses.add(ratStatus);
           } else { //or else update
-            ratStatuses.set(Math.toIntExact(ratStatusId) ,ratStatusService.updRatStatus(ratStatusId, ratStatusDto));
+            System.out.println("status found, updating");
+            int indexOfStatusToUpdate  = ratStatuses.indexOf(ratStatusService.getRatStatusById(ratStatusId));
+            RatStatus ratStatusUpdated = ratStatusService.updRatStatus(ratStatusId, ratStatusDto);
+
+            ratStatuses.set(indexOfStatusToUpdate ,ratStatusUpdated);
+
           }
         }
       }
+
 
       ratToUpdate.setRatstatuses(ratStatuses);
      // ratToUpdate.setRatStatuses(newStatusList);
@@ -178,8 +194,8 @@ public class RatService {
 
     System.out.println("ratToUpdate after update: " + ratToUpdate);
 
-
-    return repo.update(ratToUpdate);
+    RatDto ratUpdatedDto = convertRatToDto(repo.update(ratToUpdate));
+    return ratUpdatedDto;
   }
 
 }

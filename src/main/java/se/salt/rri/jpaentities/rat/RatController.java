@@ -61,10 +61,10 @@ public class RatController {
   }
 
   @CrossOrigin(origins = "http://localhost:3000")
-  @PutMapping(path="{id}")
-  ResponseEntity<RescuedRat> updateRescuedRat(@PathVariable Long id, @RequestBody UpdRatDto updRatDto){
+  @PostMapping(path="{id}")
+  ResponseEntity<RatDto> updateRescuedRat(@PathVariable Long id, @RequestBody UpdRatDto updRatDto){
     if (id < 1) return ResponseEntity.badRequest().build();
-    RescuedRat updatedRat = service.updateRat(id, updRatDto);
+    RatDto updatedRat = service.updateRat(id, updRatDto);
     if (updatedRat == null) return ResponseEntity.notFound().build();
     return ResponseEntity.accepted().body(updatedRat);
   }
