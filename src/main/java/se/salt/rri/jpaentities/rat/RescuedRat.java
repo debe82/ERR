@@ -1,17 +1,13 @@
 package se.salt.rri.jpaentities.rat;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import se.salt.rri.jpaentities.city.City;
-import se.salt.rri.jpaentities.clinicalStatus.ClinicalStatus;
 import se.salt.rri.jpaentities.ratStatus.RatStatus;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 @Entity
 public class RescuedRat {

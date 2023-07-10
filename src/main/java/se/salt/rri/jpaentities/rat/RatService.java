@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.salt.rri.jpaentities.clinicalStatus.ClinicalStatus;
 import se.salt.rri.jpaentities.clinicalStatus.ClinicalStatusService;
-import se.salt.rri.jpaentities.country.Country;
 import se.salt.rri.jpaentities.ratStatus.RatStatus;
-import se.salt.rri.jpaentities.ratStatus.RatStatusRepository;
 import se.salt.rri.jpaentities.ratStatus.RatStatusService;
 import se.salt.rri.models.*;
 import se.salt.rri.jpaentities.city.City;
@@ -36,7 +34,6 @@ public class RatService {
     return repo.getAllRats();
   }
 
-  //RatDto has all the info needed to be shown
   public RatDto convertRatToDto(RescuedRat rat) {
     String city = ""; //rat.getCity()
    return new RatDto(
@@ -85,7 +82,6 @@ public class RatService {
       ratStatusList.add(addRatStatus(newRat.getRescuedRatId(), cs));
     }
     newRat.setRatstatuses(ratStatusList);
-    //return repo.addNewRat(newRat);
     return newRat;
   }
 
@@ -119,7 +115,6 @@ public class RatService {
 
   public RatDto updateRat(Long id, UpdRatDto rat) {
     RescuedRat ratToUpdate = getRescuedRatById(id);
-    RatDto updRatDto = convertRatToDto(ratToUpdate);
 
     if(rat.name() != null && rat.name() != "") {
       ratToUpdate.setName(rat.name());
